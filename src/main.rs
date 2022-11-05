@@ -1,32 +1,33 @@
-
 pub enum DnsRType {
     A,
     AAAA,
     NS,
-    MX
+    CNAME,
+    PTR,
+    MX,
 }
 
 mod dns_question {
     use crate::DnsRType;
 
     pub struct DnsQuestion {
-        qname : u32 ,
-        qtype : DnsRType ,
-        qclass : u32 ,
+        qname: u32,
+        qtype: DnsRType,
+        qclass: u32,
 
     }
-    impl DnsQuestion {
-        fn new(a : u32 , b : u32,c : DnsRType) -> DnsQuestion {
 
-            if b != 0x0001{
+    impl DnsQuestion {
+        fn new(a: u32, b: u32, c: DnsRType) -> DnsQuestion {
+            if b != 0x0001 {
                 eprintln!("Error: qclass not 0x0001");
                 std::process::exit(1);
             }
 
             DnsQuestion {
-                qname : a ,
-                qclass: b ,
-                qtype : c,
+                qname: a,
+                qclass: b,
+                qtype: c,
             }
         }
         pub fn qname(&self) -> u32 {
@@ -49,13 +50,14 @@ mod dns_question {
         }
     }
 }
+
 mod dns_packet {
     use crate::{dns_header, dns_question, dns_rr};
 
     pub struct DnsPacket {
-        header: dns_header::DnsHeader ,
+        header: dns_header::DnsHeader,
         question: dns_question::DnsQuestion,
-        reponse: dns_rr::DnsRR
+        reponse: dns_rr::DnsRR,
     }
 
     impl DnsPacket {
@@ -79,14 +81,15 @@ mod dns_packet {
         }
     }
 }
+
 mod dns_rr {
     use crate::dns_question;
 
     pub struct DnsRR {
-        question : dns_question::DnsQuestion,
-        ttl : i32 ,
-        rdlength : i16 ,
-        rdata : u32
+        question: dns_question::DnsQuestion,
+        ttl: i32,
+        rdlength: i16,
+        rdata: u32,
     }
 
     impl DnsRR {
@@ -116,8 +119,10 @@ mod dns_rr {
         }
     }
 }
+
 mod dns_header {
     static mut LIST_ID: Vec<u16> = vec![];
+
     pub struct DnsHeader {
         id: u16,
         qr: bool,
@@ -133,6 +138,7 @@ mod dns_header {
         nscount: u16,
         arcount: u16,
     }
+
     impl DnsHeader {
         pub(crate) fn new(a: bool, b: bool, c: bool, e: bool, f: u16, g: u16, h: u16, i: u16, j: u16) -> Self {
             use rand::Rng;
@@ -243,6 +249,6 @@ mod dns_header {
 }
 
 fn main() {
-    let header = dns_header::DnsHeader::new(false,false,false,false,1,2,3,4,5);
-    println!("{}",header.id());
+    let header = dns_header::DnsHeader::new(false, false, false, false, 1, 2, 3, 4, 5);
+    println!("{}", header.id());
 }
