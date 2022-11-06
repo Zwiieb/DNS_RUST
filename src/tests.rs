@@ -7,13 +7,13 @@ fn test_dns_rtype_aaaa() {
 
 #[test]
 fn test_dns_question_class(){
-    let question = dns_question::DnsQuestion::new(3,0x0001,dns_rtype::DnsRType::AAAA);
+    let question = dns_question::DnsQuestion::new(String::from("3"),dns_rtype::DnsRType::AAAA,0x0001);
 }
 
 #[test]
 #[should_panic]
 fn test_dns_question_with_bad_class(){
-    dns_question::DnsQuestion::new(3,3,dns_rtype::DnsRType::AAAA);
+    dns_question::DnsQuestion::new(String::from("3"),dns_rtype::DnsRType::AAAA,0x0001);
 }
 #[test]
 fn test_set(){
@@ -29,5 +29,5 @@ fn test_set(){
 #[test]
 #[should_panic]
 fn test_tc(){
-    dns_packet::DnsPacket::new(false, false, true, false, 1, 2, 3, 4, 5,3,0x0001,dns_rtype::DnsRType::AAAA);
+    dns_packet::DnsPacket::new(false, false, true, false, 1, 2, 3, 4, 5,String::from("3"),0x0001,dns_rtype::DnsRType::AAAA);
 }
