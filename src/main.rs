@@ -1,24 +1,41 @@
-pub enum DnsRType {
-    A,
-    AAAA,
-    NS,
-    CNAME,
-    PTR,
-    MX,
+mod dns_rtype {
+    pub enum DnsRType {
+        A,
+        AAAA,
+        NS,
+        CNAME,
+        PTR,
+        MX,
+    }
+    impl DnsRType{
+        pub fn no(&self)-> i32{
+            match self{
+                DnsRType::A => return 1,
+                DnsRType::AAAA => return 28,
+                DnsRType::CNAME => return 12,
+                DnsRType::MX => return 5,
+                DnsRType::NS => return 2,
+                DnsRType::PTR => return 15
+
+            }
+        }
+    }
 }
 
+
 mod dns_question {
-    use crate::DnsRType;
+    use crate::dns_rtype;
 
     pub struct DnsQuestion {
         qname: u32,
-        qtype: DnsRType,
+        qtype: dns_rtype::DnsRType,
         qclass: u32,
 
     }
 
     impl DnsQuestion {
-        fn new(a: u32, b: u32, c: DnsRType) -> DnsQuestion {
+        //constructeur new
+        fn new(a: u32, b: u32, c: dns_rtype::DnsRType) -> DnsQuestion {
             if b != 0x0001 {
                 eprintln!("Error: qclass not 0x0001");
                 std::process::exit(1);
@@ -30,10 +47,12 @@ mod dns_question {
                 qtype: c,
             }
         }
+
+        //get set
         pub fn qname(&self) -> u32 {
             self.qname
         }
-        pub fn qtype(&self) -> &DnsRType {
+        pub fn qtype(&self) -> &dns_rtype::DnsRType {
             &self.qtype
         }
         pub fn qclass(&self) -> u32 {
@@ -42,7 +61,7 @@ mod dns_question {
         pub fn set_qname(&mut self, qname: u32) {
             self.qname = qname;
         }
-        pub fn set_qtype(&mut self, qtype: DnsRType) {
+        pub fn set_qtype(&mut self, qtype: dns_rtype::DnsRType) {
             self.qtype = qtype;
         }
         pub fn set_qclass(&mut self, qclass: u32) {
