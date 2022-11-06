@@ -22,7 +22,6 @@ mod dns_rtype {
     }
 }
 
-
 mod dns_question {
     use crate::dns_rtype;
 
@@ -35,7 +34,7 @@ mod dns_question {
 
     impl DnsQuestion {
         //constructeur new
-        fn new(a: u32, b: u32, c: dns_rtype::DnsRType) -> DnsQuestion {
+        pub(crate) fn new(a: u32, b: u32, c: dns_rtype::DnsRType) -> DnsQuestion {
             if b != 0x0001 {
                 eprintln!("Error: qclass not 0x0001");
                 std::process::exit(1);
@@ -266,8 +265,20 @@ mod dns_header {
         }
     }
 }
+#[cfg(test)]
+mod tests{
+    use super::*;
+
+    #[test]
+    fn test_dns_rtype_aaaa() {
+        assert_eq!(dns_rtype::DnsRType::AAAA.no(), 28);
+    }
+
+}
 
 fn main() {
+
+
     let header = dns_header::DnsHeader::new(false, false, false, false, 1, 2, 3, 4, 5);
     println!("{}", header.id());
 }
