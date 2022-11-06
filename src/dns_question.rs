@@ -1,7 +1,7 @@
 use crate::dns_rtype;
 
 pub struct DnsQuestion {
-    qname: u32,
+    qname: String,
     qtype: dns_rtype::DnsRType,
     qclass: u32,
 
@@ -9,21 +9,24 @@ pub struct DnsQuestion {
 
 impl DnsQuestion {
     //constructeur new
-    pub(crate) fn new(qname: u32, qclass: u32, qtype: dns_rtype::DnsRType) -> DnsQuestion {
+    pub(crate) fn new(qname: String,  qtype: dns_rtype::DnsRType,qclass: u32) -> DnsQuestion {
         if qclass != 0x0001 {
             panic!("Error: qclass not 0x0001");
         }
 
         DnsQuestion {
             qname,
-            qclass,
             qtype,
+            qclass,
+
         }
     }
-
+    pub fn get_size(&self)-> usize{
+        return self.qname.len()+4;
+    }
     //get set
-    pub fn qname(&self) -> u32 {
-        self.qname
+    pub fn qname(&self) -> &str {
+        &self.qname
     }
     pub fn qtype(&self) -> &dns_rtype::DnsRType {
         &self.qtype
@@ -31,7 +34,7 @@ impl DnsQuestion {
     pub fn qclass(&self) -> u32 {
         self.qclass
     }
-    pub fn set_qname(&mut self, qname: u32) {
+    pub fn set_qname(&mut self, qname: String) {
         self.qname = qname;
     }
     pub fn set_qtype(&mut self, qtype: dns_rtype::DnsRType) {
@@ -40,4 +43,5 @@ impl DnsQuestion {
     pub fn set_qclass(&mut self, qclass: u32) {
         self.qclass = qclass;
     }
+
 }

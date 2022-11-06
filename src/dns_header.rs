@@ -1,4 +1,3 @@
-
 static mut LIST_ID: Vec<u16> = vec![];
 
 pub struct DnsHeader {
@@ -20,6 +19,7 @@ pub struct DnsHeader {
 impl DnsHeader {
     pub(crate) fn new(qr: bool, aa: bool, tc: bool, ra: bool, rcode: u16, qdcount: u16, ancount: u16, nscount: u16, arcount: u16) -> Self {
         use rand::Rng;
+        if tc{panic!("TC detected")};
         //attribution d'un id unique et aléatoire
         let mut temp: u16 = rand::thread_rng().gen();
         unsafe {

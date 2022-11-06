@@ -13,7 +13,7 @@ fn test_dns_question_class(){
 #[test]
 #[should_panic]
 fn test_dns_question_with_bad_class(){
-    let question = dns_question::DnsQuestion::new(3,3,dns_rtype::DnsRType::AAAA);
+    dns_question::DnsQuestion::new(3,3,dns_rtype::DnsRType::AAAA);
 }
 #[test]
 fn test_set(){
@@ -25,4 +25,9 @@ fn test_set(){
         header.set_id(2);
         assert_eq!(header.id(),2);
     }
+}
+#[test]
+#[should_panic]
+fn test_tc(){
+    dns_packet::DnsPacket::new(false, false, true, false, 1, 2, 3, 4, 5,3,0x0001,dns_rtype::DnsRType::AAAA);
 }

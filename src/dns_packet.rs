@@ -9,21 +9,14 @@ pub struct DnsPacket {
 }
 
 impl DnsPacket {
-    pub fn new(qr: bool, aa: bool, tc: bool, ra: bool, rcode: u16, qdcount: u16, ancount: u16, nscount: u16, arcount: u16, qname: u32, qclass: u32, qtype: dns_rtype::DnsRType) -> DnsPacket {
+    pub fn new(qr: bool, aa: bool, tc: bool, ra: bool, rcode: u16, qdcount: u16, ancount: u16, nscount: u16, arcount: u16, qname: String, qclass: u32, qtype: dns_rtype::DnsRType) -> DnsPacket {
         let mut r = vec![];
-        for i in 0..qdcount{
-            r.push(DnsRR::new(dns_question::DnsQuestion::new(3,0x0001,dns_rtype::DnsRType::AAAA),2,2,2));
+        for i in 0..qdcount+ancount+nscount{
+            r.push(DnsRR::new(dns_question::DnsQuestion::new(qname.clone(),qtype,qclass),2,2,String::from("3")));
         }
-        for i in 0..ancount{
-            r.push(DnsRR::new(dns_question::DnsQuestion::new(3,0x0001,dns_rtype::DnsRType::AAAA),2,2,2));
-        }
-        for i in 0..nscount{
-            r.push(DnsRR::new(dns_question::DnsQuestion::new(3,0x0001,dns_rtype::DnsRType::AAAA),2,2,2));
-        }
-
         DnsPacket{
             header:DnsHeader::new(qr, aa, tc, ra, rcode, qdcount, ancount, nscount, arcount),
-            question:dns_question::DnsQuestion::new(qname, qclass, qtype),
+            question:dns_question::DnsQuestion::new(qname, qtype,qclass),
             reponse:r,
         }
     }
@@ -34,8 +27,16 @@ impl DnsPacket {
         let additional = self.header.arcount();
         */
     }
-    pub fn byte_size(&self) -> i32 {
-        return (12 + 6 + 12 * self.reponse.len()) as i32;
+    pub fn byte_size(&self)-> usize{
+        let mut size_in_octet = 0;
+        //rr
+        for rr in self.reponse.iter(){
+            size_in_octet += rr.get_size();
+        }
+        size_in_octet += self.question.get_size();
+        //header
+        size_in_octet+=12;
+        return size_in_octet
     }
     pub fn header(&self) -> &dns_header::DnsHeader {
         &self.header

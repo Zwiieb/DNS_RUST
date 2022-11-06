@@ -1,3 +1,5 @@
+
+#[derive(Clone, Copy)]
 pub enum DnsRType {
     A,
     AAAA,
