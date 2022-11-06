@@ -18,7 +18,7 @@ pub struct DnsHeader {
 }
 
 impl DnsHeader {
-    pub(crate) fn new(a: bool, b: bool, c: bool, e: bool, f: u16, g: u16, h: u16, i: u16, j: u16) -> Self {
+    pub(crate) fn new(qr: bool, aa: bool, tc: bool, ra: bool, rcode: u16, qdcount: u16, ancount: u16, nscount: u16, arcount: u16) -> Self {
         use rand::Rng;
         //attribution d'un id unique et aléatoire
         let mut temp: u16 = rand::thread_rng().gen();
@@ -30,20 +30,21 @@ impl DnsHeader {
 
         DnsHeader {
             id: temp,
-            qr: a,
+            qr,
             opcode: false,
-            aa: b,
-            tc: c,
+            aa,
+            tc,
             rd: true,
-            ra: e,
+            ra,
             z: false,
-            rcode: f,
-            qdcount: g,
-            ancount: h,
-            nscount: i,
-            arcount: j,
+            rcode,
+            qdcount,
+            ancount,
+            nscount,
+            arcount,
         }
     }
+
     //get set
     pub fn id(&self) -> u16 {
         self.id

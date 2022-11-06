@@ -9,15 +9,15 @@ pub struct DnsQuestion {
 
 impl DnsQuestion {
     //constructeur new
-    pub(crate) fn new(a: u32, b: u32, c: dns_rtype::DnsRType) -> DnsQuestion {
-        if b != 0x0001 {
+    pub(crate) fn new(qname: u32, qclass: u32, qtype: dns_rtype::DnsRType) -> DnsQuestion {
+        if qclass != 0x0001 {
             panic!("Error: qclass not 0x0001");
         }
 
         DnsQuestion {
-            qname: a,
-            qclass: b,
-            qtype: c,
+            qname,
+            qclass,
+            qtype,
         }
     }
 
