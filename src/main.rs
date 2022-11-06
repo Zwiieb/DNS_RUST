@@ -16,4 +16,13 @@ fn main(){
     println!("{}",pac.reponse()[0].ttl());
     println!("{}",pac.byte_size());
     //let pac = dns_packet::DnsPacket::generate_rr();
+
+    let mut x:i32 = 600;
+    let x_b1 = ((x & 0x7F000000) >> 24) as u8;
+    let x_b2 = ((x & 0x00FF0000) >> 16) as u8;
+    let x_b3 = ((x & 0x0000FF00) >> 8) as u8;
+    let x_b4 = ((x & 0x000000FF) >> 0) as u8;
+    println!("{},{},{},{}",x_b1,x_b2,x_b3,x_b4);
+    println!("{},{},{},{}",x.to_be_bytes()[0],x.to_be_bytes()[1],x.to_be_bytes()[2],x.to_be_bytes()[3]);
+
 }
