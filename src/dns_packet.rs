@@ -27,6 +27,9 @@ impl DnsPacket {
         let additional = self.header.arcount();
         */
     }
+    pub fn serialize(){
+
+    }
     pub fn byte_size(&self)-> usize{
         let mut size_in_octet = 0;
         //rr

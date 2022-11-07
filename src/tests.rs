@@ -31,3 +31,5 @@ fn test_set(){
 fn test_tc(){
     dns_packet::DnsPacket::new(false, false, true, false, 1, 2, 3, 4, 5,String::from("3"),0x0001,dns_rtype::DnsRType::AAAA);
 }
+#[test]
+fn
