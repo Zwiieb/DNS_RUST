@@ -1,5 +1,7 @@
 extern crate core;
 
+use crate::dns_rtype::DnsRType;
+
 mod dns_rr;
 mod dns_header;
 mod dns_rtype;
@@ -18,11 +20,11 @@ fn main(){
     let header = dns_header::DnsHeader::new(false, false, false, false, 1, 2, 3, 4, 5);
     println!("{}", header.id());
     */
-    let mut pac = dns_packet::DnsPacket::new(false, false, false, false, 1, 2, 3, 4, 5, String::from("3"), 0x0001, dns_rtype::DnsRType::AAAA, 0x0001, 0, 0, "".to_string());
-
-    let h = dns_header::DnsHeader::new(false, false, false, false, 20, 0, 0, 0, 0);
-
-    println!("{}",matches!(h,h));
+    let q = dns_question::DnsQuestion::new("".to_string(), DnsRType::A, 0x0001);
+    let v = q.serialize();
+    for i in v{
+        println!("{}", i );
+    }
     //let pac = dns_packet::DnsPacket::generate_rr();
     /*
     let mut x:i32 = 600;

@@ -48,4 +48,8 @@ fn test_set_qclass(){
 #[test]
 fn test_serialise(){
     let q = dns_question::DnsQuestion::new("".to_string(), DnsRType::A, 0x0001);
+    let v = q.serialize();
+    let r = vec![0 as u8,0,0,0,1,0,1];
+    assert_eq!(r,v);
+
 }
