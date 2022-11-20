@@ -23,10 +23,15 @@ fn test_get_set_qname(){
     assert_eq!(q.qname(),String::from("what"));
 }
 #[test]
-fn test_get_set_no_qtype(){
+fn test_no_qtype(){
     let mut q = DnsQuestion::new(String::from("test"), DnsRType::A, 0x0001);
     q.set_qtype(dns_rtype::DnsRType::AAAA);
     assert_eq!(q.qtype().no(),28);
+}
+fn test_get_set_qtype(){
+    let mut q = DnsQuestion::new(String::from("test"), DnsRType::A, 0x0001);
+    q.set_qtype(dns_rtype::DnsRType::AAAA);
+    assert!(matches!(q.qtype(),DnsRType::AAAA));
 }
 #[test]
 fn test_get_qclass(){
@@ -38,4 +43,9 @@ fn test_get_qclass(){
 fn test_set_qclass(){
     let mut q =DnsQuestion::new(String::from("3"),dns_rtype::DnsRType::AAAA,0x0001);
     q.set_qclass(0x0000);
+}
+
+#[test]
+fn test_serialise(){
+    let q = dns_question::DnsQuestion::new("".to_string(), DnsRType::A, 0x0001);
 }

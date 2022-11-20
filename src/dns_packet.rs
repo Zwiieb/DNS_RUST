@@ -24,7 +24,7 @@ impl DnsPacket {
         }
     }
 
-    pub fn serialize(&self)->Vec<u8>{
+    pub fn serialize(&self)-> Vec<u8>{
         let mut vec = Vec::new() as Vec<u8>;
 
         vec.append(&mut self.header.serialize());
@@ -45,14 +45,14 @@ impl DnsPacket {
         size_in_octet+=12;
         return size_in_octet
     }
-    pub fn header(&self) -> &dns_header::DnsHeader {
-        &self.header
+    pub fn header(&mut self) -> &mut dns_header::DnsHeader {
+        &mut self.header
     }
-    pub fn question(&self) -> &dns_question::DnsQuestion {
-        &self.question
+    pub fn question(&mut self) -> &mut dns_question::DnsQuestion {
+        &mut self.question
     }
-    pub fn reponse(&self) -> &Vec<DnsRR> {
-        &self.reponse
+    pub fn reponse(&mut self) -> &mut Vec<DnsRR> {
+        &mut self.reponse
     }
     pub fn set_header(&mut self, header: dns_header::DnsHeader) {
         self.header = header;

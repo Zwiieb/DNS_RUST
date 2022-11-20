@@ -8,15 +8,21 @@ mod dns_packet;
 mod tests_dns_question;
 mod tests_dns_rtype;
 mod tests_dns_packet;
+mod test_dns_header;
+mod test_dns_rr;
 
 fn main(){
 
+
+    /*
     let header = dns_header::DnsHeader::new(false, false, false, false, 1, 2, 3, 4, 5);
     println!("{}", header.id());
+    */
+    let mut pac = dns_packet::DnsPacket::new(false, false, false, false, 1, 2, 3, 4, 5, String::from("3"), 0x0001, dns_rtype::DnsRType::AAAA, 0x0001, 0, 0, "".to_string());
 
-    let pac = dns_packet::DnsPacket::new(false, false, false, false, 1, 2, 3, 4, 5, String::from("3"), 0x0001, dns_rtype::DnsRType::AAAA, 0x0001, 0, 0, "".to_string());
-    println!("{}",pac.reponse()[0].ttl());
-    println!("{}",pac.byte_size());
+    let h = dns_header::DnsHeader::new(false, false, false, false, 20, 0, 0, 0, 0);
+
+    println!("{}",matches!(h,h));
     //let pac = dns_packet::DnsPacket::generate_rr();
     /*
     let mut x:i32 = 600;

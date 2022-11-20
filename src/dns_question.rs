@@ -26,18 +26,10 @@ impl DnsQuestion {
         let mut res = Vec::new() as Vec<u8>;
         let mut split = self.qname.split(".");
 
-        for s in split{
-            println!("{}",s);
-            let mut strnumber = s.chars().count().to_string();
-            let mut z = strnumber.as_bytes();
-            for j in z{
-                res.push(*j);
-            }
+        let str = self.qname.as_bytes();
 
-            let mut temp = s.as_bytes();
-            for i in temp{
-                res.push(*i);
-            }
+        for i in str{
+            res.push(*i);
         }
         res.push(0x00);
 

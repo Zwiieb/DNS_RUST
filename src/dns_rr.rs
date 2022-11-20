@@ -79,4 +79,22 @@ impl DnsRR {
     pub fn set_rdata(&mut self, rdata: String) {
         self.rdata = rdata;
     }
+    pub fn rname(&self) -> u16 {
+        self.rname
+    }
+    pub fn Dnsrtype(&self) -> DnsRType {
+        self.Dnsrtype
+    }
+    pub fn rclass(&self) -> u16 {
+        self.rclass
+    }
+    pub fn set_rname(&mut self, rname: u16) {
+        self.rname = rname;
+    }
+    pub fn set_Dnsrtype(&mut self, Dnsrtype: DnsRType) {
+        self.Dnsrtype = Dnsrtype;
+    }
+    pub fn set_rclass(&mut self, rclass: u16) {
+        self.rclass = rclass;
+    }
 }
