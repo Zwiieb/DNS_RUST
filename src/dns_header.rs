@@ -44,7 +44,56 @@ impl DnsHeader {
             arcount,
         }
     }
+    pub fn serialize(&self) ->Vec<u8>{
 
+        let mut res = Vec::new();
+
+        let idB = self.id.to_be_bytes();
+        let qdB = self.qdcount.to_be_bytes();
+        let anB = self.ancount.to_be_bytes();
+        let nsB = self.nscount.to_be_bytes();
+        let arB = self.arcount.to_be_bytes();
+
+        let mut header2 = 0 as u16;
+
+        if self.qr==true{
+            header2 += 0b1000000000000000;//32768
+        }
+        if self.aa==true{
+            header2 += 0b10000000000;//1024
+        }
+        if self.rd==true{
+            header2 += 0b100000000;//256
+        }
+        if self.ra==true{
+            header2 +=0b10000000;//128
+        }
+        header2 += self.rcode as u16;
+
+        let mut h2 = header2.to_be_bytes();
+
+        for i in idB {
+            res.push(i);
+        }
+
+        for i in h2{
+            res.push(i);
+        }
+        for i in qdB{
+            res.push(i);
+        }
+        for i in anB{
+            res.push(i);
+        }
+        for i in nsB{
+            res.push(i);
+        }
+        for i in arB{
+            res.push(i);
+        }
+
+        res
+    }
     //get set
     pub fn id(&self) -> u16 {
         self.id

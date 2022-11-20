@@ -1,6 +1,8 @@
-use crate::{dns_header, dns_question, dns_rr, dns_rtype};
+use crate::{dns_header, dns_question};
 use crate::dns_header::DnsHeader;
+use crate::dns_question::DnsQuestion;
 use crate::dns_rr::DnsRR;
+use crate::dns_rtype::DnsRType;
 
 pub struct DnsPacket {
     header: dns_header::DnsHeader,
@@ -9,26 +11,28 @@ pub struct DnsPacket {
 }
 
 impl DnsPacket {
-    pub fn new(qr: bool, aa: bool, tc: bool, ra: bool, rcode: u16, qdcount: u16, ancount: u16, nscount: u16, arcount: u16, qname: String, qclass: u32, qtype: dns_rtype::DnsRType) -> DnsPacket {
-        let mut r = vec![];
-        for i in 0..qdcount+ancount+nscount{
-            r.push(DnsRR::new(dns_question::DnsQuestion::new(qname.clone(),qtype,qclass),2,2,String::from("3")));
-        }
-        DnsPacket{
-            header:DnsHeader::new(qr, aa, tc, ra, rcode, qdcount, ancount, nscount, arcount),
-            question:dns_question::DnsQuestion::new(qname, qtype,qclass),
-            reponse:r,
-        }
-    }
-    pub fn generate_rr(mut self){
-        /*
-        let answer = self.header.ancount();
-        let authority = self.header.nscount();
-        let additional = self.header.arcount();
-        */
-    }
-    pub fn serialize(){
+    pub fn new(qr: bool, aa: bool, tc: bool, ra: bool, rcode: u16, qdcount: u16, ancount: u16, nscount: u16,arcount : u16, qname:String,offset:u16, qtype : DnsRType, qclass : u16,ttl:u32,rdlength:u16,rdata:String) -> DnsPacket{
 
+        let mut vec = vec![];
+        for z in 0..(ancount+nscount+arcount){
+            vec.push(DnsRR::new(offset, qtype, qclass,ttl,rdlength,rdata.clone()));
+        }
+        DnsPacket {
+            header: DnsHeader::new(qr,aa,tc,ra,rcode,qdcount,ancount,nscount,arcount),
+            question: DnsQuestion::new(qname,qtype,qclass),
+            reponse: vec,
+        }
+    }
+
+    pub fn serialize(&self)->Vec<u8>{
+        let mut vec = Vec::new() as Vec<u8>;
+
+        vec.append(&mut self.header.serialize());
+        vec.append(&mut self.question.serialize());
+        for RR in self.reponse.iter(){
+            vec.append(&mut RR.serialize());
+        }
+        vec
     }
     pub fn byte_size(&self)-> usize{
         let mut size_in_octet = 0;
@@ -53,9 +57,7 @@ impl DnsPacket {
     pub fn set_header(&mut self, header: dns_header::DnsHeader) {
         self.header = header;
     }
-    pub fn set_question(&mut self, question: dns_question::DnsQuestion) {
-        self.question = question;
-    }
+    pub fn set_question(&mut self, question: dns_question::DnsQuestion) {self.question = question;}
     pub fn set_reponse(&mut self, reponse: Vec<DnsRR>) {
         self.reponse = reponse;
     }
