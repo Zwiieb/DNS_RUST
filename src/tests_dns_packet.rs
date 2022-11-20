@@ -33,6 +33,11 @@ fn test_byte_size(){
     assert_eq!(161,pac.byte_size())
 }
 #[test]
+fn test_to_dname(){
+    let pac = dns_packet::DnsPacket::new(false, false, false, false, 1, 2, 3, 4, 5, String::from("google"), 0x0001, dns_rtype::DnsRType::AAAA, 0x0001, 0, 0, "".to_string());
+    assert_eq!(dns_packet::DnsPacket::to_dname(pac.serialize(), 12), "google")
+}
+#[test]
 fn test_serialize(){
     let mut pac = dns_packet::DnsPacket::new(false, false, false, false, 1, 2, 3, 4, 5, String::from("3"), 0x0001, dns_rtype::DnsRType::AAAA, 0x0001, 0, 0, "".to_string());
     pac.header().set_id(3);

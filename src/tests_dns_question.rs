@@ -53,3 +53,10 @@ fn test_serialise(){
     assert_eq!(r,v);
 
 }
+#[test]
+pub fn test_deserialize() {
+    let q = DnsQuestion::new(String::from("test"), DnsRType::A, 0x0001);
+    let v= vec![116 as u8, 101, 115, 116, 0, 0, 1, 0, 1];
+    let v2 = DnsQuestion::deserialize(v);
+    assert!(matches!(q,v2));
+}

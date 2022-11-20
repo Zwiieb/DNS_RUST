@@ -34,6 +34,7 @@ impl DnsPacket {
         }
         vec
     }
+
     pub fn byte_size(&self)-> usize{
         let mut size_in_octet = 0;
         //rr
@@ -44,6 +45,22 @@ impl DnsPacket {
         //header
         size_in_octet+=12;
         return size_in_octet
+    }
+    pub fn to_dname(vec: Vec<u8>,offset : u8 )->String{
+        let mut temp = Vec::new() as Vec<u8>;
+        for i in offset..(vec.len() as u8){
+            if vec[i as usize]==0x00 as u8{
+                break;
+            }else{
+                temp.push(vec[i as usize]);
+            }
+        }
+        let s = match String::from_utf8(temp) {
+            Ok(v) => v,
+            Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+        };
+
+        s
     }
     pub fn header(&mut self) -> &mut dns_header::DnsHeader {
         &mut self.header

@@ -54,6 +54,73 @@ impl DnsRR {
 
         res
     }
+    pub fn deserialize(vec : Vec<u8>)-> Vec<DnsRR>{
+        let mut res = Vec::new() as Vec<DnsRR>;
+        let mut temp = Vec::new() as Vec<u8>;
+        for i in 0..vec.len() as usize{
+            if vec[i] == 0xc0{
+                if !(temp.is_empty()){
+                    println!("creation de rr");
+                    //create rr and push to res
+                    let name = ((temp[0] as u16) << 8) | temp[1] as u16;
+                    let mut rrtype = ((temp[2] as u16) << 8) | temp[3] as u16;
+                    let mut rtype = DnsRType::A;
+                    match rrtype{
+                        1 => rtype = DnsRType::A,
+                        28 => rtype = DnsRType::AAAA,
+                        2 => rtype = DnsRType::NS,
+                        5 => rtype = DnsRType::CNAME,
+                        12 => rtype = DnsRType::PTR,
+                        15 => rtype = DnsRType::MX,
+                        _=> rrtype=1
+                    }
+                    let class = ((temp[4] as u16) << 8) | temp[5] as u16;
+                    let ttl = ((temp[6] as u32) <<24) | ((temp[7] as u32) <<16) | ((temp[8] as u32) <<8) | temp[9] as u32;
+                    let length = ((temp[10] as u16) << 8) | temp[11] as u16;
+                    let mut strvec = Vec::new() as Vec<u8>;
+                    for i in 12..temp.len() as usize{
+                        strvec.push(temp[i]);
+                    }
+                    let rdata = match String::from_utf8(strvec) {
+                        Ok(v) => v,
+                        Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+                    };
+                    res.push(DnsRR { rname: name, Dnsrtype: rtype, rclass: class, ttl: ttl, rdlength: length, rdata: rdata });
+                    temp.clear();
+                }
+            }
+            temp.push(vec[i]);
+        }
+        let name = ((temp[0] as u16) << 8) | temp[1] as u16;
+        let mut rrtype = ((temp[2] as u16) << 8) | temp[3] as u16;
+        let mut rtype = DnsRType::A;
+        match rrtype{
+            1 => rtype = DnsRType::A,
+            28 => rtype = DnsRType::AAAA,
+            2 => rtype = DnsRType::NS,
+            5 => rtype = DnsRType::CNAME,
+            12 => rtype = DnsRType::PTR,
+            15 => rtype = DnsRType::MX,
+            _=> rrtype=1
+        }
+        let class = ((temp[4] as u16) << 8) | temp[5] as u16;
+        let ttl = ((temp[6] as u32) <<24) | ((temp[7] as u32) <<16) | ((temp[8] as u32) <<8) | temp[9] as u32;
+        let length = ((temp[10] as u16) << 8) | temp[11] as u16;
+        let mut strvec = Vec::new() as Vec<u8>;
+        for i in 12..temp.len() as usize{
+            strvec.push(temp[i]);
+        }
+        let rdata = match String::from_utf8(strvec) {
+            Ok(v) => v,
+            Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+        };
+        res.push(DnsRR { rname: name, Dnsrtype: rtype, rclass: class, ttl: ttl, rdlength: length, rdata: rdata });
+        temp.clear();
+        //create rr and push tu res
+        res
+    }
+
+
     pub fn get_size(&self)-> usize{
         let mut size = 0;
         size += 12;
